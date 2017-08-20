@@ -49,7 +49,6 @@ Indicator.prototype.calculate = function(tp) {
     // calculate current TP
         
     var avgtp = this.TP.result;
-    console.log('avgtp  ************************************** ' + avgtp);
     if (typeof(avgtp) == 'boolean') {
         log.error("Failed to get average tp from indicator.");
         return;
@@ -79,7 +78,6 @@ Indicator.prototype.calculate = function(tp) {
     console.log('**************************************');
     */
     // log.debug("===\t", this.mean, "\t", this.tp, '\t', this.TP.result, "\t", sum, "\t", avgtp, '\t', this.result.toFixed(2));
-    console.log('This is the result_______________ ' + this.result);
 }
 
 module.exports = Indicator;
