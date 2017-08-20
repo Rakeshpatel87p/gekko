@@ -79,6 +79,7 @@ module.exports = function *() {
     if(event.type === 'trade') {
       let trade = event.trade;
       gekkoManager.push(id, 'trades', trade);
+      console.log('trade took place here boi----------------- ' + trade)
       let wsEvent = {
         type: 'trade',
         gekko_id: id,

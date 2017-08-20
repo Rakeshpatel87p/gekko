@@ -162,7 +162,6 @@ PerformanceAnalyzer.prototype.calculateReportStatistics = function() {
   }
 
   report.alpha = report.profit - report.market;
-
   return report;
 }
 

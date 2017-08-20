@@ -115,6 +115,8 @@ Manager.prototype.setFee = function(callback) {
       callback();
   }.bind(this);
   util.retry(this.exchange.getFee, set);
+  Loggerlog(this.exchange.getFee);
+  console.log('we got the fee bro ' + this.exchange.getFee)
 };
 
 Manager.prototype.setTicker = function(callback) {
@@ -161,7 +163,7 @@ Manager.prototype.trade = function(what, retry) {
       price /= 1e8;
 
       this.buy(amount, price);
-
+      console.log('subtracting price from fee here ' + (price - this.fee))
     } else if(what === 'SELL') {
 
       price *= 1e8;
@@ -171,6 +173,7 @@ Manager.prototype.trade = function(what, retry) {
       amount = this.getBalance(this.asset);
       price = this.ticker.ask;
       this.sell(amount, price);
+      console.log('adding price to fee here ' + (price + this.fee))
     }
   };
   async.series([
