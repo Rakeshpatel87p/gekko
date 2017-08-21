@@ -220,6 +220,8 @@ Manager.prototype.buy = function(amount, price) {
     price
   );
   this.exchange.buy(amount, price, this.noteOrder);
+  console.log('Attempting to BUY ' + amount + this.asset + ' at price' + price; 
+
 };
 
 // first do a quick check to see whether we can sell
@@ -251,6 +253,8 @@ Manager.prototype.sell = function(amount, price) {
     price
   );
   this.exchange.sell(amount, price, this.noteOrder);
+  console.log('Attempting to SELL ' + amount + ' at price' + price; 
+
 };
 
 Manager.prototype.noteOrder = function(err, order) {
