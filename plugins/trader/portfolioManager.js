@@ -115,8 +115,6 @@ Manager.prototype.setFee = function(callback) {
       callback();
   }.bind(this);
   util.retry(this.exchange.getFee, set);
-  Loggerlog(this.exchange.getFee);
-  console.log('we got the fee bro ' + this.exchange.getFee)
 };
 
 Manager.prototype.setTicker = function(callback) {
@@ -156,14 +154,14 @@ Manager.prototype.trade = function(what, retry) {
     if(what === 'BUY') {
 
       amount = this.getBalance(this.currency) / this.ticker.ask;
-
+      console.log('TESTING here is the balance that is being returned ', this.getBalance(this.currency))
+      console.log('TESTING ---------Amount that will be bought ', amount);
       price = this.ticker.bid;
       price *= 1e8;
       price = Math.floor(price);
       price /= 1e8;
 
       this.buy(amount, price);
-      console.log('subtracting price from fee here ' + (price - this.fee))
     } else if(what === 'SELL') {
 
       price *= 1e8;
@@ -172,8 +170,9 @@ Manager.prototype.trade = function(what, retry) {
 
       amount = this.getBalance(this.asset);
       price = this.ticker.ask;
+      console.log('TESTING ---------SELLING, amount ', amount);
+      console.log('TESTING ---------SELLING, price ', price);
       this.sell(amount, price);
-      console.log('adding price to fee here ' + (price + this.fee))
     }
   };
   async.series([
@@ -197,9 +196,10 @@ Manager.prototype.getMinimum = function(price) {
 Manager.prototype.buy = function(amount, price) {
 
   var minimum = this.getMinimum(price);
-
+  console.log('TESTING ------checking to see if we can buy. Amount to buy ', amount, 'at price ', price);
   // if order to small
   if(amount < minimum) {
+    console.log('TESTING ---------Wanted to buy', this.asset, 'but the amount is too small','(' + parseFloat(amount).toFixed(12) + ')', 'at', this.exchange.name)
     return log.error(
       'Wanted to buy',
       this.asset,
@@ -220,7 +220,7 @@ Manager.prototype.buy = function(amount, price) {
     price
   );
   this.exchange.buy(amount, price, this.noteOrder);
-  console.log('Attempting to BUY ' + amount + this.asset + ' at price' + price; 
+  console.log('TESTING --------Attempting to BUY ' + amount + this.asset + ' at price' + price); 
 
 };
 
@@ -230,9 +230,10 @@ Manager.prototype.buy = function(amount, price) {
 Manager.prototype.sell = function(amount, price) {
 
   var minimum = this.getMinimum(price);
-
+  console.log('TESTING ----------check to see if we can sell for amount ', amount, 'at price ', price)
   // if order to small
   if(amount < minimum) {
+    console.log('TESTING -------Wanted to buy', this.currency, 'but the amount is too small','(' + parseFloat(amount).toFixed(12) + ')','at', this.exchange.name)
     return log.error(
       'Wanted to buy',
       this.currency,
@@ -253,7 +254,7 @@ Manager.prototype.sell = function(amount, price) {
     price
   );
   this.exchange.sell(amount, price, this.noteOrder);
-  console.log('Attempting to SELL ' + amount + ' at price' + price; 
+  console.log('TESTING ------Attempting to SELL ' + amount + ' at price' + price); 
 
 };
 
@@ -265,6 +266,7 @@ Manager.prototype.noteOrder = function(err, order) {
   this.orders.push(order);
   // if after 1 minute the order is still there
   // we cancel and calculate & make a new one
+  console.log('TESTING ------noting order down. If still there after 1 min, new one is made ', order)
   setTimeout(this.checkOrder, util.minToMs(1));
 };
 
@@ -275,6 +277,7 @@ Manager.prototype.cancelLastOrder = function(done) {
       return this.relayOrder(done);
 
     this.orders = [];
+    console.log('TESTING--------Canceling last order');
     done();
   });
 }
@@ -284,7 +287,7 @@ Manager.prototype.cancelLastOrder = function(done) {
 Manager.prototype.checkOrder = function() {
   var handleCheckResult = function(err, filled) {
     if(!filled) {
-      log.info(this.action, 'order was not (fully) filled, cancelling and creating new order');
+      log.info(this.action, 'TESTING order was not (fully) filled, cancelling and creating new order');
       this.exchange.cancelOrder(_.last(this.orders), _.bind(handleCancelResult, this));
 
       return;
